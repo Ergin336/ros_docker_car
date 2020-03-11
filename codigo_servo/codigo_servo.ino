@@ -1,4 +1,10 @@
 #include <Servo.h>
+#include <ros.h>
+#include <std_msgs/Float64.h>
+
+ros::NodeHandle nh;
+std_msgs::Float64 Distancia;
+ros::Publisher chatter("chatter",&Distancia);
 
 #define FRONT (8)
 #define LEFT (4)
@@ -285,4 +291,7 @@ void loop() {
  if (angle >= ANGLE_LEFT_VISION ) incAngle = -ANGLE_STEP;
  else if (angle <= ANGLE_RIGHT_VISION) incAngle = +ANGLE_STEP;
  }
+ Distancia.data = d;
+ chatter.publish(&Distancia);
+ nh.spinOnce();
 } 
