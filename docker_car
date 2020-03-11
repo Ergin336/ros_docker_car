@@ -1,9 +1,9 @@
-docker pull ros:kinetic
+sudo docker pull ros:kinetic
 
-docker run -it --name=catkin_ws ros:kinetic bash
+sudo docker run -it --name=catkin_ws ros:kinetic bash
 
-apt-get update
-apt-get install -y build-essential
+sudo apt-get update
+sudo apt-get install -y build-essential
 mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src
 catkin_init_workspace
@@ -13,31 +13,36 @@ catkin_make
 sed -i '/source "\/opt\/ros\/$ROS_DISTRO\/setup.bash"/a source "\/root\/catkin_ws\/devel\/setup.bash"' \ros_entrypoint.sh
 exit
 
-docker commit --author="Ergin Kamberov Pose"  --message="It works! catkin workspace configured with built ros_tutorials" catkin_ws ros:kinetic_car
-docker images | grep ros
-docker inspect ros:kinetic_talker
-docker network create kinet
-docker network ls
-
-docker run -it --rm --net kinet --name master ros:kinetic_car  roscore
-docker run -it --rm --net kinet --name talker --env ROS_HOSTNAME=talker --env ROS_MASTER_URI=http://master:11311 ros:kinetic_car rosrun talker_py publicador.py
-docker run -it --rm --net kinet --name listener --env ROS_HOSTNAME=talker --env ROS_MASTER_URI=http://master:11311 ros:kinetic_car  rosrun talker_py subscriptor.py
-
-docker service ls
-docker ps 
-docker exec -it master bash
+sudo docker commit --author="Ergin Kamberov Pose"  --message="It works! catkin workspace configured with built ros_tutorials" catkin_ws ros:kinetic_car
+sudo docker images | grep ros
+sudo docker inspect ros:kinetic_talker
+sudo docker network create kinet
+sudo docker network ls
+sudo docker service ls
+sudo docker ps 
+sudo docker exec -it master bash
 source /ros_entrypoint.sh
-rostopic list
+sudo rostopic list
 
 
-docker tag ros:kinetic_car ergin336/ros_car:kinetic_car
-docker login -u "user" -p "password" docker.io
-docker push ergin336/ros_car:kinetic_car
-docker pull ergin336/ros_car:kinetic_car
+sudo docker tag ros:kinetic_car ergin336/ros_car:kinetic_car
+sudo docker login -u "user" -p "password" docker.io
+sudo docker push ergin336/ros_car:kinetic_car
+sudo docker pull ergin336/ros_car:kinetic_car
 
-docker network rm kinet
+sudo docker network rm kinet #THIS WILL ERASE THE DOCKER CREATED NETWORK
 
 
 https://hub.docker.com/r/ergin336/ros_car
 
 replce ros:kinetic_car for ergin336/ros_car:kinetic_car
+
+
+ONCE IN USE:
+
+sudo docker run -it --name=catkin_ws ergin336/ros_car:kinetic_car bash #JUST RUN THIS TO ACCEED TO THE DOCKER SOFTWARE CONTAINER
+
+
+sudo docker run -it --rm --net kinet --name master ergin336/ros_car:kinetic_car roscore #RUN ROSCORE
+sudo docker run -it --rm --net kinet --name car --env ROS_HOSTNAME=talker --env ROS_MASTER_URI=http://master:11311 ergin336/ros_car:kinetic_car roslaunch  ~/catkin_ws/src/Proyectos_integrados_LE_coche/ roslaunchliquid
+
