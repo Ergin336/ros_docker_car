@@ -291,7 +291,7 @@ void loop() {
  if (angle >= ANGLE_LEFT_VISION ) incAngle = -ANGLE_STEP;
  else if (angle <= ANGLE_RIGHT_VISION) incAngle = +ANGLE_STEP;
  }
- Distancia.data = Fdistance;
+ Distancia.data = Fspace;
  chatter.publish(&Distancia);
  nh.spinOnce();
 } 
